@@ -1,23 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { asyncTasks } from "./reducers/tasksSlice";
 
 function App() {
+  const dispatch = useDispatch();
+  const tasks = useSelector((state) => state.tasks.tasks);
+  const loading = useSelector((state) => state.tasks.loading);
+  useEffect(() => {
+    dispatch(asyncTasks());
+  }, [dispatch]);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h3>List of tasks: </h3>
+      {loading ? (
+        <p>Task is loading</p>
+      ) : (
+        <ul>
+          {tasks.map((task) => (
+            <li key={task.id}>
+              {task.title}-{task.description}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
